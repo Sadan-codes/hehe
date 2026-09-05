@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .font-handwriting {
+    font-family: 'Caveat', cursive;
+  }
+  .font-romantic {
+    font-family: 'Dancing Script', cursive;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
