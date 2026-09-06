@@ -23,6 +23,7 @@ import { HeartCursorTrail } from './components/HeartCursorTrail';
 import { RosePetalsBackground } from './components/RosePetalsBackground';
 import { AtmosphericOverlay } from './components/AtmosphericOverlay';
 import { AtmosphereModal } from './components/AtmosphereModal';
+import { EditProfileModal } from './components/EditProfileModal';
 import { useAtmosphere } from './utils/useAtmosphere';
 import { sound } from './utils/audio';
 import confetti from 'canvas-confetti';
@@ -47,9 +48,24 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
-  // Couple Profile with customizable names & anniversary
+  // Couple Profile with customizable names & anniversary (Aishhh & Sadan)
   const [profile, setProfile] = useState<CoupleProfile>(() => {
-    return loadFromStorage<CoupleProfile>('girlfriend_profile', DEFAULT_PROFILE);
+    const loaded = loadFromStorage<CoupleProfile>('girlfriend_profile', DEFAULT_PROFILE);
+    if (
+      !loaded.partnerName ||
+      loaded.partnerName.toLowerCase().includes('princess') ||
+      loaded.partnerName.toLowerCase().includes('girlfriend')
+    ) {
+      const updated: CoupleProfile = {
+        ...DEFAULT_PROFILE,
+        partnerName: 'Aishhh',
+        yourName: 'Sadan',
+        nickname: 'Aishhh',
+      };
+      saveToStorage('girlfriend_profile', updated);
+      return updated;
+    }
+    return loaded;
   });
 
   // 3D Opening Intro state
@@ -68,6 +84,7 @@ export default function App() {
   // Modals state
   const [showHeartbeat, setShowHeartbeat] = useState(false);
   const [showAtmosphereModal, setShowAtmosphereModal] = useState(false);
+  const [showEditProfile, setShowEditProfile] = useState(false);
 
   // Live Location Atmospheric Weather Engine
   const {
@@ -89,13 +106,36 @@ export default function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // Special Love Note state
-  const [specialNote, setSpecialNote] = useState<SpecialLoveNote>(() =>
-    loadFromStorage('girlfriend_special_note', DEFAULT_SPECIAL_NOTE)
-  );
+  const [specialNote, setSpecialNote] = useState<SpecialLoveNote>(() => {
+    const loaded = loadFromStorage('girlfriend_special_note', DEFAULT_SPECIAL_NOTE);
+    if (
+      !loaded.title ||
+      loaded.title.toLowerCase().includes('princess') ||
+      loaded.signature.toLowerCase().includes('charming')
+    ) {
+      const updated: SpecialLoveNote = {
+        ...DEFAULT_SPECIAL_NOTE,
+        title: 'To My Dearest Aishhh',
+        signature: 'With all my heart, forever yours, Sadan',
+      };
+      saveToStorage('girlfriend_special_note', updated);
+      return updated;
+    }
+    return loaded;
+  });
 
-  const [notes, setNotes] = useState<LoveNote[]>(() =>
-    loadFromStorage('girlfriend_notes', DEFAULT_LOVE_NOTES)
-  );
+  const [notes, setNotes] = useState<LoveNote[]>(() => {
+    const loaded = loadFromStorage('girlfriend_notes', DEFAULT_LOVE_NOTES);
+    if (
+      !loaded ||
+      loaded.length === 0 ||
+      loaded.some((n) => n.content?.toLowerCase().includes('princess') || n.title?.toLowerCase().includes('princess'))
+    ) {
+      saveToStorage('girlfriend_notes', DEFAULT_LOVE_NOTES);
+      return DEFAULT_LOVE_NOTES;
+    }
+    return loaded;
+  });
 
   const [reasons, setReasons] = useState<LoveReason[]>(() =>
     loadFromStorage('girlfriend_reasons', DEFAULT_REASONS)
@@ -169,7 +209,7 @@ export default function App() {
   const goToNextSlide = () => {
     if (currentSlide === 0 && !isVaultUnlocked) {
       sound.playBell(260, 0.3, 0.15);
-      showToast('Enter our secret passcode 1802 to unlock! 🔑');
+      showToast('Enter our secret passcode to unlock! 🔑');
       return;
     }
     // Prevent navigating past the last slide!
@@ -270,38 +310,21 @@ export default function App() {
     touchStartY.current = null;
   };
 
-  // Shower of Love / Kisses action
+  // Shower of Love / Kisses action - reduced, subtle & sweet
   const handleShowerLove = () => {
-    sound.playChime('sparkle');
+    sound.playKiss();
 
-    const end = Date.now() + 1000;
-    const frame = () => {
-      confetti({
-        particleCount: 8,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-        colors: ['#ff4d88', '#ff758f', '#ff8fa3', '#ffb3c1', '#ffd166'],
-        shapes: ['circle'],
-        scalar: 1.4,
-      });
-      confetti({
-        particleCount: 8,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-        colors: ['#ff4d88', '#ff758f', '#ff8fa3', '#ffb3c1', '#ffd166'],
-        shapes: ['circle'],
-        scalar: 1.4,
-      });
+    // Gentle single subtle burst of soft petals/hearts
+    confetti({
+      particleCount: 12,
+      spread: 45,
+      origin: { y: 0.65 },
+      colors: ['#ff4d88', '#fb7185', '#ffd166'],
+      shapes: ['circle'],
+      scalar: 0.9,
+    });
 
-      if (Date.now() < end) {
-        requestAnimationFrame(frame);
-      }
-    };
-    frame();
-
-    showToast(`Sent a shower of endless love to ${profile.partnerName}! 💋✨`);
+    showToast(`Sent sweet kisses to ${profile.partnerName}! 💋✨`);
   };
 
   const handleAddNote = (newNote: LoveNote) => {
@@ -316,8 +339,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FFF5F7] text-[#4A3540] relative selection:bg-pink-200 selection:text-pink-900 font-sans">
-      {/* Subtle Drifting Rose Petals Background Particle System */}
-      <RosePetalsBackground />
+      {/* Subtle Drifting Rose Petals Background Particle System (only after entering) */}
+      {!showIntro && <RosePetalsBackground />}
 
       {/* Subtle Weather Atmospheric Overlay (Light Rain, Soft Sunlight, Sunset Glow, etc.) */}
       <AtmosphericOverlay
@@ -348,6 +371,16 @@ export default function App() {
         partnerName={profile.partnerName}
       />
 
+      <EditProfileModal
+        isOpen={showEditProfile}
+        onClose={() => setShowEditProfile(false)}
+        profile={profile}
+        onSave={(updated) => {
+          setProfile(updated);
+          showToast(`Saved personalized profile for ${updated.partnerName} & ${updated.yourName}! 💑`);
+        }}
+      />
+
       {/* Weather Atmosphere Mood & Skies Modal */}
       <AtmosphereModal
         isOpen={showAtmosphereModal}
@@ -367,17 +400,31 @@ export default function App() {
       {/* Top Header */}
       <header className="sticky top-0 z-40 bg-[#FFF5F7]/90 backdrop-blur-md border-b border-pink-200/60 shadow-xs">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2">
-          {/* Logo / Title */}
+          {/* Logo / Title & Name Personalization */}
           <div className="flex items-center gap-2 min-w-0">
             <div className="w-8 h-8 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-500 shrink-0">
               <Heart className="w-4 h-4 fill-rose-500" />
             </div>
-            <span
-              className="font-romantic text-xl sm:text-2xl text-rose-950 font-bold tracking-wide truncate max-w-[130px] sm:max-w-none"
-              style={{ fontFamily: "'Dancing Script', cursive" }}
-            >
-              For {profile.partnerName}
-            </span>
+            <div className="flex items-center gap-1.5 min-w-0">
+              <span
+                className="font-romantic text-xl sm:text-2xl text-rose-950 font-bold tracking-wide truncate max-w-[110px] xs:max-w-[150px] sm:max-w-none"
+                style={{ fontFamily: "'Dancing Script', cursive" }}
+              >
+                For {profile.partnerName}
+              </span>
+              <button
+                id="edit-profile-btn"
+                onClick={() => {
+                  sound.playChime('sparkle');
+                  setShowEditProfile(true);
+                }}
+                className="px-2 py-0.5 rounded-full bg-pink-100 hover:bg-pink-200 active:bg-pink-300 text-rose-700 text-[10px] sm:text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer shadow-2xs border border-pink-200/80 shrink-0"
+                title="Personalize names (Aishhh & Sadan)"
+              >
+                <Sparkles className="w-3 h-3 text-rose-500" />
+                <span className="hidden xs:inline">Edit Names</span>
+              </button>
+            </div>
           </div>
 
           {/* Header Action Buttons */}
@@ -512,7 +559,7 @@ export default function App() {
                 isUnlocked={isVaultUnlocked}
                 onUnlockSuccess={() => {
                   setIsVaultUnlocked(true);
-                  showToast('Vault unlocked with secret code 1802! 💖✨');
+                  showToast('Vault unlocked! 💖✨');
                 }}
                 onNext={() => {
                   setCurrentSlide(1);
@@ -764,32 +811,66 @@ export default function App() {
             <span className="hidden xs:inline">Prev</span>
           </motion.button>
 
-          {/* Step Dots */}
-          <div className="flex items-center justify-center gap-0.5 sm:gap-1.5 px-0.5 py-0.5">
-            {slideDefinitions.map((slide, i) => (
-              <button
-                key={i}
-                onClick={() => {
-                  if (!isVaultUnlocked && i > 0) {
-                    sound.playBell(260, 0.3, 0.15);
-                    showToast('Enter our secret passcode 1802 to unlock! 🔐');
-                    setCurrentSlide(0);
-                    return;
-                  }
-                  sound.playChime('pop');
-                  setCurrentSlide(i);
+          {/* Sleek Animated Progress Ribbon */}
+          <div className="flex flex-col items-center justify-center px-1 sm:px-3">
+            {/* Chapter Label & Indicator */}
+            <div className="flex items-center gap-1.5 mb-1 text-[11px] sm:text-xs font-semibold text-rose-800/90 select-none">
+              <span className="font-bold text-rose-600">Chapter {currentSlide + 1}</span>
+              <span className="text-rose-300">•</span>
+              <span className="truncate max-w-[110px] xs:max-w-[150px] sm:max-w-[210px]">
+                {slideDefinitions[currentSlide].label}
+              </span>
+              <span className="text-[10px] text-rose-400 font-normal">
+                ({currentSlide + 1}/{totalSlides})
+              </span>
+            </div>
+
+            {/* Interactive Progress Ribbon Track */}
+            <div
+              className="relative w-36 xs:w-52 sm:w-72 md:w-80 h-3 sm:h-3.5 bg-rose-100/80 rounded-full border border-pink-200/90 shadow-inner flex items-center p-0.5 cursor-pointer touch-manipulation group"
+              onClick={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+                const targetIndex = Math.round(ratio * (totalSlides - 1));
+                if (!isVaultUnlocked && targetIndex > 0) {
+                  sound.playBell(260, 0.3, 0.15);
+                  showToast('Enter our secret passcode to unlock! 🔐');
+                  setCurrentSlide(0);
+                  return;
+                }
+                sound.playChime('pop');
+                setCurrentSlide(targetIndex);
+              }}
+              title={`Jump through chapters (Currently on: ${slideDefinitions[currentSlide].label})`}
+            >
+              {/* Animated Gradient Fill Ribbon */}
+              <motion.div
+                className="h-full rounded-full bg-gradient-to-r from-rose-400 via-pink-500 to-rose-500 relative shadow-xs"
+                initial={false}
+                animate={{
+                  width: `${Math.max((currentSlide / (totalSlides - 1)) * 100, 6)}%`,
                 }}
-                className="min-h-[44px] min-w-[20px] xs:min-w-[24px] sm:min-w-[34px] px-0.5 sm:px-1 py-2 sm:py-3 flex items-center justify-center cursor-pointer rounded-full hover:bg-pink-100/50 active:scale-95 transition-transform touch-manipulation"
-                aria-label={`Go to slide ${i + 1}: ${slide.title}`}
-                title={`${slide.label} (${i + 1}/${totalSlides})`}
+                transition={{ type: 'spring', stiffness: 280, damping: 28 }}
               >
-                <span
-                  className={`h-2 sm:h-2.5 rounded-full transition-all duration-300 block ${
-                    currentSlide === i ? 'w-4 xs:w-5 sm:w-7 bg-rose-500 shadow-xs' : 'w-1.5 sm:w-2.5 bg-pink-200 hover:bg-pink-300'
-                  }`}
-                />
-              </button>
-            ))}
+                {/* Glowing Leading Heart Tip */}
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-4 h-4 rounded-full bg-white shadow-md flex items-center justify-center border border-rose-300 pointer-events-none">
+                  <Heart className="w-2.5 h-2.5 fill-rose-500 text-rose-500" />
+                </div>
+              </motion.div>
+
+              {/* Step Notch Markers */}
+              <div className="absolute inset-0 flex items-center justify-between px-1 pointer-events-none">
+                {slideDefinitions.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                      i <= currentSlide ? 'bg-white/90' : 'bg-rose-300/40'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Next Button or Replay button if on final slide */}

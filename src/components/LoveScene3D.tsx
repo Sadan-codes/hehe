@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import confetti from 'canvas-confetti';
 import { sound } from '../utils/audio';
 import { Sparkles, Heart, Flower2, RefreshCw } from 'lucide-react';
 
@@ -473,20 +472,6 @@ export const LoveScene3D: React.FC<LoveScene3DProps> = ({
       }
       burstParticlesRef.current.geometry.attributes.position.needsUpdate = true;
     }
-
-    // Canvas confetti hearts
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX || rect.left + rect.width / 2) / window.innerWidth;
-    const y = (e.clientY || rect.top + rect.height / 2) / window.innerHeight;
-
-    confetti({
-      particleCount: 22,
-      spread: 70,
-      origin: { x, y },
-      colors: ['#ff4d88', '#ff70a6', '#ff97b7', '#ffccd9', '#ffd166'],
-      shapes: ['circle'],
-      scalar: 1.3,
-    });
 
     if (onHeartClick) onHeartClick();
   };

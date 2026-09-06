@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { motion, AnimatePresence } from 'motion/react';
 import { sound } from '../utils/audio';
-import confetti from 'canvas-confetti';
 import { Heart, Sparkles, ArrowRight } from 'lucide-react';
 
 interface OpeningIntro3DProps {
@@ -128,8 +127,8 @@ export const OpeningIntro3D: React.FC<OpeningIntro3DProps> = ({
     haloMesh.scale.set(1.72, 1.72, 1.72);
     heartGroup.add(haloMesh);
 
-    // Orbiting Stardust Particles
-    const starCount = 220;
+    // Orbiting Stardust Particles - subtle & delicate
+    const starCount = 50;
     const starGeo = new THREE.BufferGeometry();
     const starPositions = new Float32Array(starCount * 3);
     const starColors = new Float32Array(starCount * 3);
@@ -237,15 +236,7 @@ export const OpeningIntro3D: React.FC<OpeningIntro3DProps> = ({
           if (!hasPopped) {
             setHasPopped(true);
             setShowText(true);
-            setTimeout(() => setShowButton(true), 600);
-            // Confetti burst as the heart settles
-            confetti({
-              particleCount: 35,
-              spread: 80,
-              origin: { y: 0.5 },
-              colors: ['#ff4d88', '#ff70a6', '#ffccd9', '#ffd166'],
-              shapes: ['circle'],
-            });
+            setTimeout(() => setShowButton(true), 500);
           }
 
           const pulseTime = (elapsed % 1.6) / 1.6;
@@ -298,13 +289,6 @@ export const OpeningIntro3D: React.FC<OpeningIntro3DProps> = ({
     if (!sound.getIsPlaying()) {
       sound.startMusicBox();
     }
-    confetti({
-      particleCount: 45,
-      spread: 90,
-      origin: { y: 0.5 },
-      colors: ['#ff4d88', '#ff758f', '#ff8fa3', '#ffb3c1', '#ffd166'],
-      shapes: ['circle'],
-    });
     onEnter();
   };
 

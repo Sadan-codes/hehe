@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SpecialLoveNote } from '../types';
-import { Heart, ArrowRight, Sparkles } from 'lucide-react';
+import { Heart, ArrowRight, Sparkles, Edit3, X, Check } from 'lucide-react';
 import { sound } from '../utils/audio';
 
 interface SpecialLoveNoteSlideProps {
@@ -14,9 +14,30 @@ interface SpecialLoveNoteSlideProps {
 export const SpecialLoveNoteSlide: React.FC<SpecialLoveNoteSlideProps> = ({
   note,
   partnerName,
-  yourName: _yourName,
+  yourName,
+  onUpdateNote,
   onNext,
 }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(note.title);
+  const [editBody, setEditBody] = useState(note.body);
+  const [editSignature, setEditSignature] = useState(note.signature);
+  const [editDate, setEditDate] = useState(note.date || '1 January 2025');
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (onUpdateNote) {
+      onUpdateNote({
+        title: editTitle.trim() || `To My Dearest ${partnerName}`,
+        body: editBody.trim(),
+        signature: editSignature.trim() || `Forever yours, ${yourName}`,
+        date: editDate.trim() || '1 January 2025',
+      });
+    }
+    sound.playChime('sparkle');
+    setIsEditing(false);
+  };
+
   return (
     <div className="w-full max-w-3xl mx-auto flex flex-col items-center justify-center py-6 px-4">
       {/* Eyebrow badge */}
@@ -42,9 +63,28 @@ export const SpecialLoveNoteSlide: React.FC<SpecialLoveNoteSlideProps> = ({
         <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-rose-300/60 rounded-tl-3xl pointer-events-none m-3" />
         <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-rose-300/60 rounded-br-3xl pointer-events-none m-3" />
 
-        {/* Wax seal watermark */}
-        <div className="absolute top-6 right-6 w-12 h-12 rounded-full bg-rose-500/10 border border-rose-300/40 flex items-center justify-center text-rose-400 rotate-12 pointer-events-none">
-          <Heart className="w-6 h-6 fill-rose-400" />
+        {/* Wax seal & Edit Button */}
+        <div className="absolute top-5 right-5 flex items-center gap-2 z-20">
+          {onUpdateNote && (
+            <button
+              onClick={() => {
+                setEditTitle(note.title);
+                setEditBody(note.body);
+                setEditSignature(note.signature);
+                setEditDate(note.date || '1 January 2025');
+                setIsEditing(true);
+              }}
+              className="px-3 py-1.5 rounded-full bg-amber-100/80 hover:bg-amber-200 active:bg-amber-300 text-amber-900 text-xs font-semibold flex items-center gap-1.5 transition-all shadow-2xs border border-amber-300/60 cursor-pointer"
+              title="Customize or edit this love letter"
+            >
+              <Edit3 className="w-3.5 h-3.5 text-amber-700" />
+              <span>Edit Letter</span>
+            </button>
+          )}
+
+          <div className="w-10 h-10 rounded-full bg-rose-500/10 border border-rose-300/40 hidden sm:flex items-center justify-center text-rose-400 rotate-12 pointer-events-none">
+            <Heart className="w-5 h-5 fill-rose-400" />
+          </div>
         </div>
 
         {/* Letter Content */}
@@ -86,6 +126,106 @@ export const SpecialLoveNoteSlide: React.FC<SpecialLoveNoteSlideProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Edit Letter Modal */}
+      {isEditing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full border border-pink-200 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setIsEditing(false)}
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-pink-100 text-rose-700 cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="flex items-center gap-2 text-rose-500 mb-2">
+              <Heart className="w-5 h-5 fill-rose-500" />
+              <span className="text-xs font-bold uppercase tracking-wider">Customize Love Letter</span>
+            </div>
+
+            <h3 className="font-serif font-bold text-2xl text-rose-950 mb-1">
+              Edit Your Heartfelt Note
+            </h3>
+            <p className="text-xs text-rose-800/75 mb-4">
+              Write your own personalized words for {partnerName}. Changes save instantly to your browser!
+            </p>
+
+            <form onSubmit={handleSave} className="space-y-4 text-left">
+              <div>
+                <label className="block text-xs font-semibold text-rose-900 mb-1">
+                  Letter Heading
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-pink-200 text-sm focus:outline-rose-400 bg-pink-50/30"
+                  placeholder="e.g. To My Dearest Aishhh"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-rose-900 mb-1">
+                  Meeting / Anniversary Date
+                </label>
+                <input
+                  type="text"
+                  value={editDate}
+                  onChange={(e) => setEditDate(e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-pink-200 text-sm focus:outline-rose-400 bg-pink-50/30"
+                  placeholder="e.g. 1 January 2025"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-rose-900 mb-1">
+                  Letter Body Message
+                </label>
+                <textarea
+                  rows={6}
+                  required
+                  value={editBody}
+                  onChange={(e) => setEditBody(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-pink-200 text-sm focus:outline-rose-400 bg-pink-50/30 leading-relaxed font-sans"
+                  placeholder="Write your beautiful message here..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-rose-900 mb-1">
+                  Signature
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editSignature}
+                  onChange={(e) => setEditSignature(e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-pink-200 text-sm focus:outline-rose-400 bg-pink-50/30"
+                  placeholder={`e.g. Forever yours, ${yourName}`}
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(false)}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-rose-800 hover:bg-pink-100 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl text-xs font-bold bg-rose-500 hover:bg-rose-600 text-white shadow-sm flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Check className="w-4 h-4" />
+                  Save Letter
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Navigation to Next Slide */}
       <button

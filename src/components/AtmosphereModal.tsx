@@ -113,8 +113,8 @@ export const AtmosphereModal: React.FC<AtmosphereModalProps> = ({
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5 text-xs text-rose-800 font-medium">
-                    <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" />
-                    <span className="truncate">{weatherData.locationName}</span>
+                    <Sparkles className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                    <span>Atmospheric Sky</span>
                     {weatherData.temperature !== null && (
                       <span className="px-1.5 py-0.5 rounded-full bg-white text-rose-900 text-[10px] font-semibold">
                         {weatherData.temperature}°C
@@ -131,7 +131,7 @@ export const AtmosphereModal: React.FC<AtmosphereModalProps> = ({
                 onClick={onRefreshLocation}
                 disabled={weatherData.isLoading}
                 className="px-2.5 py-1.5 rounded-full bg-white hover:bg-rose-50 active:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-medium flex items-center gap-1 shrink-0 transition-all cursor-pointer shadow-2xs disabled:opacity-50"
-                title="Detect location weather again"
+                title="Refresh sky atmosphere"
               >
                 <RefreshCw
                   className={`w-3.5 h-3.5 ${weatherData.isLoading ? 'animate-spin' : ''}`}
@@ -148,7 +148,7 @@ export const AtmosphereModal: React.FC<AtmosphereModalProps> = ({
                 </label>
                 {weatherData.isAuto && (
                   <span className="text-[11px] px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 font-semibold">
-                    Live Synced
+                    Time Synced
                   </span>
                 )}
               </div>
@@ -172,7 +172,7 @@ export const AtmosphereModal: React.FC<AtmosphereModalProps> = ({
                   </div>
                   <div>
                     <div className="text-xs sm:text-sm font-bold flex items-center gap-1.5">
-                      Auto: Match Our Local Weather
+                      Auto: Match Day & Night Clock
                       {weatherData.mode === 'auto' && (
                         <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/25">
                           Active
@@ -184,7 +184,7 @@ export const AtmosphereModal: React.FC<AtmosphereModalProps> = ({
                         weatherData.mode === 'auto' ? 'text-rose-100' : 'text-stone-500'
                       }`}
                     >
-                      Detects real-time local rain, sunlight, or sunset at {weatherData.locationName}
+                      Automatically adjusts sunlight, sunset golden hour, or starry night based on your clock
                     </div>
                   </div>
                 </div>

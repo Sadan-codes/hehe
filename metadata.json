@@ -1,9 +1,7 @@
 {
   "name": "For My Love",
-  "description": "An interactive romantic anniversary and love slideshow featuring daily love affirmations, drifting rose petals, live location weather atmospheric overlays (light rain, soft sunlight, golden hour), automatic recommended romantic music, luxury 1802 secret passcode vault, anniversary counter since 1 January 2025, heartfelt love note, 3D crystal heart, celestial starlight sky, open-when letters, reasons jar, and Our Forever grand finale.",
-  "requestFramePermissions": [
-    "geolocation"
-  ],
+  "description": "An interactive romantic anniversary and love slideshow for Aishhh & Sadan featuring daily love affirmations, drifting rose petals, atmospheric skies (light rain, soft sunlight, golden hour), romantic music, luxury 1802 secret passcode vault, anniversary counter since 1 January 2025, heartfelt love note, 3D crystal heart, celestial starlight sky, open-when letters, reasons jar, and Our Forever grand finale.",
+  "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
   ]

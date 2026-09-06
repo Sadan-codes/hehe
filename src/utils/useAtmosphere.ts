@@ -41,89 +41,30 @@ export function useAtmosphere() {
     boolean | null
   >(null);
 
-  // Fetch weather for coordinates using Open-Meteo
-  const fetchWeatherForCoords = useCallback(
-    async (latitude: number, longitude: number) => {
-      try {
-        setIsLoading(true);
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('Weather fetch failed');
-        const data = await res.json();
-
-        if (data && data.current_weather) {
-          const wmo = data.current_weather.weathercode ?? 0;
-          const isDay = data.current_weather.is_day ?? 1;
-          const temp = Math.round(data.current_weather.temperature ?? 22);
-          const currentHour = new Date().getHours();
-
-          const mapped = mapWmoToCondition(wmo, isDay, currentHour);
-          setTemperature(temp);
-          setWeatherDescription(mapped.description);
-
-          if (mode === 'auto') {
-            setCondition(mapped.condition);
-          }
-        }
-      } catch (err) {
-        // Fallback to local time
-        const fallback = getLocalTimeAtmosphere();
-        setTemperature(fallback.temperature);
-        setWeatherDescription(fallback.description);
-        if (mode === 'auto') {
-          setCondition(fallback.condition);
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [mode]
-  );
-
-  // Attempt live location detection
-  const detectLiveLocation = useCallback(() => {
-    if (typeof window === 'undefined' || !navigator.geolocation) {
-      setHasLocationPermission(false);
-      const fallback = getLocalTimeAtmosphere();
-      setTemperature(fallback.temperature);
-      setWeatherDescription(fallback.description);
-      if (mode === 'auto') setCondition(fallback.condition);
-      return;
-    }
-
+  // Refresh atmosphere based on current local device time (no location permissions needed)
+  const refreshAtmosphere = useCallback(() => {
     setIsLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setHasLocationPermission(true);
-        fetchWeatherForCoords(
-          position.coords.latitude,
-          position.coords.longitude
-        );
-      },
-      (error) => {
-        setHasLocationPermission(false);
-        setIsLoading(false);
-        const fallback = getLocalTimeAtmosphere();
-        setTemperature(fallback.temperature);
-        setWeatherDescription(`${fallback.description} (Local Time)`);
-        if (mode === 'auto') setCondition(fallback.condition);
-      },
-      {
-        enableHighAccuracy: false,
-        timeout: 7000,
-        maximumAge: 600000, // 10 minutes cache
+    try {
+      const local = getLocalTimeAtmosphere();
+      setTemperature(local.temperature);
+      setWeatherDescription(local.description);
+      setLocationName(getLocalCityName());
+      if (mode === 'auto') {
+        setCondition(local.condition);
       }
-    );
-  }, [fetchWeatherForCoords, mode]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [mode]);
 
-  // Initial detection when mode is 'auto'
+  // Initial update when mode changes or on mount
   useEffect(() => {
     if (mode === 'auto') {
-      detectLiveLocation();
+      refreshAtmosphere();
     } else {
       setCondition(mode);
     }
-  }, [mode, detectLiveLocation]);
+  }, [mode, refreshAtmosphere]);
 
   // Handle ambient rain audio synchronization
   useEffect(() => {
@@ -180,6 +121,7 @@ export function useAtmosphere() {
     setMode,
     setIntensity,
     toggleAmbientRainAudio,
-    detectLiveLocation,
+    detectLiveLocation: refreshAtmosphere,
+    refreshAtmosphere,
   };
 }

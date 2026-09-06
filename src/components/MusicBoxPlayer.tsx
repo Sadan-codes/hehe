@@ -17,6 +17,7 @@ import {
   Music2,
   Heart,
   X,
+  ExternalLink,
 } from 'lucide-react';
 
 export const MusicBoxPlayer: React.FC = () => {
@@ -98,34 +99,57 @@ export const MusicBoxPlayer: React.FC = () => {
             </div>
 
             {/* Currently Playing Card */}
-            <div className="mt-3 p-2.5 rounded-xl bg-gradient-to-r from-rose-50 to-pink-50 border border-pink-100/80 flex items-center justify-between">
-              <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                <div
-                  className={`w-9 h-9 rounded-full bg-rose-500 text-white flex items-center justify-center shrink-0 shadow-sm ${
-                    isPlaying ? 'animate-spin' : ''
-                  }`}
-                  style={{ animationDuration: '6s' }}
-                >
-                  <Disc3 className="w-5 h-5" />
-                </div>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-rose-200/60 text-rose-800 font-semibold uppercase tracking-wider">
-                      {currentTrack.badge}
-                    </span>
+            <div className="mt-3 p-3 rounded-2xl bg-gradient-to-br from-rose-50 via-pink-50 to-amber-50/50 border border-pink-100/90 shadow-2xs">
+              <div className="flex items-center justify-between gap-2.5">
+                <div className="flex items-center gap-2.5 min-w-0 pr-1">
+                  <div
+                    className={`w-10 h-10 rounded-full bg-gradient-to-tr from-rose-500 to-pink-500 text-white flex items-center justify-center shrink-0 shadow-sm ${
+                      isPlaying ? 'animate-spin' : ''
+                    }`}
+                    style={{ animationDuration: '6s' }}
+                  >
+                    <Disc3 className="w-5 h-5" />
                   </div>
-                  <p className="text-xs font-bold text-rose-900 truncate mt-0.5">{currentTrack.title}</p>
-                  <p className="text-[11px] text-rose-500 truncate">{currentTrack.artist}</p>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-200/70 text-rose-800 font-bold uppercase tracking-wider">
+                        {currentTrack.badge}
+                      </span>
+                      {currentTrack.movie && (
+                        <span className="text-[10px] text-rose-500 font-medium truncate">
+                          • {currentTrack.movie}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm font-bold text-rose-950 truncate mt-0.5">{currentTrack.title}</p>
+                    <p className="text-[11px] text-rose-600 truncate">{currentTrack.artist}</p>
+                  </div>
                 </div>
+
+                {/* Equalizer Waveform Animation */}
+                {isPlaying && (
+                  <div className="flex items-end gap-0.5 h-4 shrink-0 px-1">
+                    <span className="w-1 bg-rose-400 rounded-full animate-pulse h-4" style={{ animationDuration: '0.6s' }} />
+                    <span className="w-1 bg-rose-500 rounded-full animate-pulse h-2" style={{ animationDuration: '0.4s' }} />
+                    <span className="w-1 bg-pink-400 rounded-full animate-pulse h-3.5" style={{ animationDuration: '0.8s' }} />
+                    <span className="w-1 bg-rose-600 rounded-full animate-pulse h-2.5" style={{ animationDuration: '0.5s' }} />
+                  </div>
+                )}
               </div>
 
-              {/* Equalizer Waveform Animation */}
-              {isPlaying && (
-                <div className="flex items-end gap-0.5 h-4 shrink-0 px-1">
-                  <span className="w-1 bg-rose-400 rounded-full animate-pulse h-4" style={{ animationDuration: '0.6s' }} />
-                  <span className="w-1 bg-rose-500 rounded-full animate-pulse h-2" style={{ animationDuration: '0.4s' }} />
-                  <span className="w-1 bg-pink-400 rounded-full animate-pulse h-3.5" style={{ animationDuration: '0.8s' }} />
-                  <span className="w-1 bg-rose-600 rounded-full animate-pulse h-2.5" style={{ animationDuration: '0.5s' }} />
+              {/* Iconic Hit Lyric Highlight Banner */}
+              {currentTrack.lyricsSnippet && (
+                <div className="mt-2.5 p-2 rounded-xl bg-white/80 border border-rose-200/60 shadow-2xs">
+                  <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-rose-500 mb-1">
+                    <Sparkles className="w-3 h-3 text-rose-500" />
+                    <span>Hit Lyrics</span>
+                  </div>
+                  <p
+                    className="text-xs sm:text-sm font-medium text-rose-900 leading-relaxed italic"
+                    style={{ fontFamily: "'Dancing Script', cursive, sans-serif", fontSize: '1.05rem' }}
+                  >
+                    "{currentTrack.lyricsSnippet}"
+                  </p>
                 </div>
               )}
             </div>
@@ -156,6 +180,49 @@ export const MusicBoxPlayer: React.FC = () => {
                 <SkipForward className="w-4.5 h-4.5" />
               </button>
             </div>
+
+            {/* Direct Studio Track Link on YouTube */}
+            {currentTrack.youtubeSearchUrl && (
+              <div className="flex justify-center mb-2.5">
+                <a
+                  href={currentTrack.youtubeSearchUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-colors shadow-2xs cursor-pointer active:scale-95"
+                  title="Open original Bollywood studio track on YouTube"
+                >
+                  <ExternalLink className="w-3.5 h-3.5 text-rose-500" />
+                  <span>Listen Studio Version on YouTube</span>
+                </a>
+              </div>
+            )}
+
+            {/* Full Lyrics & Meaning Collapsible Card */}
+            {currentTrack.fullLyrics && currentTrack.fullLyrics.length > 0 && (
+              <div className="mb-2.5 p-2.5 rounded-xl bg-pink-50/50 border border-pink-100/80">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[10px] font-bold text-rose-500 uppercase tracking-wider flex items-center gap-1">
+                    <Heart className="w-3 h-3 text-rose-500 fill-rose-500" /> Full Song Lyrics
+                  </span>
+                  <span className="text-[10px] text-rose-400 font-medium">Romantic Hindi Hits</span>
+                </div>
+
+                <div className="space-y-1 text-xs text-rose-950 font-normal leading-relaxed max-h-28 overflow-y-auto pr-1 custom-scrollbar">
+                  {currentTrack.fullLyrics.map((line, idx) => (
+                    <p key={idx} className="hover:text-rose-600 transition-colors">
+                      {line}
+                    </p>
+                  ))}
+                </div>
+
+                {currentTrack.translation && (
+                  <div className="mt-2 pt-1.5 border-t border-pink-200/50 text-[11px] text-rose-700/80 italic">
+                    <span className="font-semibold text-rose-800 not-italic">Meaning: </span>
+                    {currentTrack.translation}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Recommended Playlist Drawer */}
             <div className="mt-2 pt-2 border-t border-pink-100">

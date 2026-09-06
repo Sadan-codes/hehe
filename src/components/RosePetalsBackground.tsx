@@ -39,25 +39,25 @@ export const RosePetalsBackground: React.FC = () => {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
-    // Responsive petal count: ~25 on mobile, ~45 on desktop for a subtle, elegant presence
-    const petalCount = Math.min(Math.max(Math.floor((width * height) / 38000), 22), 48);
+    // Minimal, calm petal count: only 3-5 subtle petals so the site is clean and uncluttered
+    const petalCount = width < 640 ? 3 : 5;
 
     const createPetal = (initialYRandom = false): Petal => {
-      const size = Math.random() * 11 + 10; // 10px to 21px
+      const size = Math.random() * 6 + 7; // 7px to 13px - smaller, delicate
       return {
         x: Math.random() * width,
         y: initialYRandom ? Math.random() * height : -30 - Math.random() * 50,
         size,
-        speedY: Math.random() * 0.75 + 0.55, // Slow gentle descent
-        speedX: (Math.random() - 0.5) * 0.45,
+        speedY: Math.random() * 0.35 + 0.25, // Very slow gentle drift
+        speedX: (Math.random() - 0.5) * 0.2,
         rotation: Math.random() * Math.PI * 2,
-        rotationSpeed: (Math.random() - 0.5) * 0.015,
+        rotationSpeed: (Math.random() - 0.5) * 0.008,
         flip: Math.random() * Math.PI,
-        flipSpeed: Math.random() * 0.02 + 0.01,
+        flipSpeed: Math.random() * 0.01 + 0.005,
         color: PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)],
-        opacity: Math.random() * 0.35 + 0.28, // Soft translucent look
+        opacity: Math.random() * 0.12 + 0.12, // Very soft translucent look
         swayOffset: Math.random() * Math.PI * 2,
-        swaySpeed: Math.random() * 0.02 + 0.012,
+        swaySpeed: Math.random() * 0.01 + 0.005,
       };
     };
 

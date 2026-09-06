@@ -107,8 +107,8 @@ export const ReasonsJar: React.FC<ReasonsJarProps> = ({
     sound.playKiss();
 
     confetti({
-      particleCount: 25,
-      spread: 60,
+      particleCount: 6,
+      spread: 35,
       origin: {
         x: (jarRect.left + jarRect.width / 2) / window.innerWidth,
         y: (jarRect.top + jarRect.height * 0.55) / window.innerHeight,

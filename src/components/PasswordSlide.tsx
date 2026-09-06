@@ -7,12 +7,10 @@ import {
   Sparkles,
   Delete,
   Heart,
-  HelpCircle,
   ArrowRight,
   ShieldCheck,
   CheckCircle2,
   LockKeyhole,
-  Flame,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { sound } from '../utils/audio';
@@ -50,36 +48,17 @@ export const PasswordSlide: React.FC<PasswordSlideProps> = ({
   const [pin, setPin] = useState<string>('');
   const [isError, setIsError] = useState<boolean>(false);
   const [isSuccessAnim, setIsSuccessAnim] = useState<boolean>(false);
-  const [showHint, setShowHint] = useState<boolean>(false);
   const [showDigits, setShowDigits] = useState<boolean>(true);
 
   // Trigger celebratory confetti burst
   const triggerUnlockCelebration = () => {
     try {
       confetti({
-        particleCount: 70,
-        spread: 85,
+        particleCount: 50,
+        spread: 75,
         origin: { y: 0.6 },
         colors: ['#f43f5e', '#ec4899', '#fbbf24', '#f472b6', '#ffffff'],
       });
-      setTimeout(() => {
-        confetti({
-          particleCount: 45,
-          angle: 60,
-          spread: 60,
-          origin: { x: 0.2, y: 0.65 },
-          colors: ['#fda4af', '#f43f5e', '#fbbf24'],
-        });
-      }, 150);
-      setTimeout(() => {
-        confetti({
-          particleCount: 45,
-          angle: 120,
-          spread: 60,
-          origin: { x: 0.8, y: 0.65 },
-          colors: ['#f472b6', '#db2777', '#fbcfe8'],
-        });
-      }, 300);
     } catch {
       // safe fallback
     }
@@ -144,23 +123,6 @@ export const PasswordSlide: React.FC<PasswordSlideProps> = ({
     setPin('');
     setIsError(false);
   }, [isSuccessAnim, isUnlocked]);
-
-  const handleAutoFillCode = () => {
-    sound.playChime('pop');
-    setPin('1802');
-    setIsSuccessAnim(true);
-    sound.playChime('sparkle');
-    triggerUnlockCelebration();
-
-    setTimeout(() => {
-      onUnlockSuccess();
-      setIsSuccessAnim(false);
-      setPin('');
-      setTimeout(() => {
-        onNext();
-      }, 600);
-    }, 1400);
-  };
 
   // Physical keyboard listener
   useEffect(() => {
@@ -311,7 +273,7 @@ export const PasswordSlide: React.FC<PasswordSlideProps> = ({
               'Our secret vault is unlocked. You can explore all our memories anytime!'
             ) : isError ? (
               <span className="text-rose-600 font-semibold">
-                Incorrect passcode! Hint: our special date 1802 💕
+                Incorrect passcode! Please try again 💕
               </span>
             ) : (
               'Enter our special 4-digit secret key to unlock our love story.'
@@ -407,8 +369,8 @@ export const PasswordSlide: React.FC<PasswordSlideProps> = ({
                 })}
               </motion.div>
 
-              {/* Toggle Show/Hide digits & Hint Button */}
-              <div className="flex items-center justify-between w-full px-2 mb-4 text-xs">
+              {/* Toggle Show/Hide digits */}
+              <div className="flex items-center justify-center w-full px-2 mb-4 text-xs">
                 <button
                   type="button"
                   onClick={() => setShowDigits(!showDigits)}
@@ -416,47 +378,7 @@ export const PasswordSlide: React.FC<PasswordSlideProps> = ({
                 >
                   {showDigits ? 'Mask with hearts' : 'Show numbers'}
                 </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    sound.playBell(580, 0.2, 0.1);
-                    setShowHint(!showHint);
-                  }}
-                  className="flex items-center gap-1 text-rose-600 hover:text-rose-800 font-semibold cursor-pointer transition-colors"
-                >
-                  <HelpCircle className="w-3.5 h-3.5 text-rose-500" />
-                  <span>{showHint ? 'Hide hint' : 'Need hint?'}</span>
-                </button>
               </div>
-
-              {/* Hint Box with Quick Auto-fill Option */}
-              <AnimatePresence>
-                {showHint && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="w-full mb-4 overflow-hidden"
-                  >
-                    <div className="bg-gradient-to-r from-rose-50 via-pink-50 to-amber-50 border border-rose-200/80 rounded-2xl p-3 text-xs text-rose-900 text-center flex flex-col items-center justify-center gap-2 shadow-sm">
-                      <div className="flex items-center gap-1.5 font-medium">
-                        <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
-                        <span>
-                          The passcode is <strong>1802</strong> 💕
-                        </span>
-                      </div>
-                      <button
-                        onClick={handleAutoFillCode}
-                        className="px-3 py-1 rounded-full bg-rose-500 hover:bg-rose-600 text-white font-semibold text-[11px] transition-colors shadow-2xs cursor-pointer flex items-center gap-1"
-                      >
-                        <Flame className="w-3 h-3" />
-                        <span>Quick-Fill 1802</span>
-                      </button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
 
               {/* Styled Keypad - Tactile Luxury Rose-Gold Keycaps */}
               <div className="grid grid-cols-3 gap-2.5 sm:gap-3.5 w-full max-w-xs mb-4">

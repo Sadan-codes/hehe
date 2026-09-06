@@ -76,7 +76,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                   required
                   value={partnerName}
                   onChange={(e) => setPartnerName(e.target.value)}
-                  placeholder="e.g. Sarah, My Princess"
+                  placeholder="e.g. Aishhh"
                   className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-pink-200 text-sm focus:outline-rose-400 bg-pink-50/30"
                 />
                 <User className="w-4 h-4 text-rose-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -93,7 +93,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                   required
                   value={yourName}
                   onChange={(e) => setYourName(e.target.value)}
-                  placeholder="e.g. Alex, Your Prince"
+                  placeholder="e.g. Sadan"
                   className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-pink-200 text-sm focus:outline-rose-400 bg-pink-50/30"
                 />
                 <User className="w-4 h-4 text-rose-400 absolute left-3 top-1/2 -translate-y-1/2" />
