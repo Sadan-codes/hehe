@@ -18,12 +18,10 @@ import { ReasonsJar } from './components/ReasonsJar';
 import { PasswordSlide } from './components/PasswordSlide';
 import { EndingSlide } from './components/EndingSlide';
 import { HeartbeatModal } from './components/HeartbeatModal';
-import { MusicBoxPlayer } from './components/MusicBoxPlayer';
 import { HeartCursorTrail } from './components/HeartCursorTrail';
 import { RosePetalsBackground } from './components/RosePetalsBackground';
 import { AtmosphericOverlay } from './components/AtmosphericOverlay';
 import { AtmosphereModal } from './components/AtmosphereModal';
-import { EditProfileModal } from './components/EditProfileModal';
 import { useAtmosphere } from './utils/useAtmosphere';
 import { sound } from './utils/audio';
 import confetti from 'canvas-confetti';
@@ -42,31 +40,18 @@ import {
   Activity,
   Lock,
   Infinity as InfinityIcon,
-  Volume2,
-  VolumeX,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
-  // Couple Profile with customizable names & anniversary (Aishhh & Sadan)
-  const [profile, setProfile] = useState<CoupleProfile>(() => {
-    const loaded = loadFromStorage<CoupleProfile>('girlfriend_profile', DEFAULT_PROFILE);
-    if (
-      !loaded.partnerName ||
-      loaded.partnerName.toLowerCase().includes('princess') ||
-      loaded.partnerName.toLowerCase().includes('girlfriend')
-    ) {
-      const updated: CoupleProfile = {
-        ...DEFAULT_PROFILE,
-        partnerName: 'Aishhh',
-        yourName: 'Sadan',
-        nickname: 'Aishhh',
-      };
-      saveToStorage('girlfriend_profile', updated);
-      return updated;
-    }
-    return loaded;
-  });
+  // Couple Profile fixed to AISHHH & AISHHPAGLUU (editing option removed per user request)
+  const profile: CoupleProfile = {
+    partnerName: 'AISHHH',
+    yourName: 'AISHHPAGLUU',
+    anniversaryDate: '2025-01-01',
+    nickname: 'AISHHH',
+    specialSongTitle: 'Melodious Romance',
+  };
 
   // 3D Opening Intro state
   const [showIntro, setShowIntro] = useState(true);
@@ -74,17 +59,18 @@ export default function App() {
   // Vault Unlock State (Passcode 1802) - Always starts locked on new session/refresh
   const [isVaultUnlocked, setIsVaultUnlocked] = useState<boolean>(false);
 
-  // Clear any persisted unlock flag so it never opens pre-unlocked
+  // Clear any persisted unlock flag or outdated profile/note so it stays clean
   useEffect(() => {
     try {
       localStorage.removeItem('girlfriend_vault_unlocked');
+      localStorage.removeItem('girlfriend_profile');
+      localStorage.removeItem('girlfriend_special_note');
     } catch {}
   }, []);
 
   // Modals state
   const [showHeartbeat, setShowHeartbeat] = useState(false);
   const [showAtmosphereModal, setShowAtmosphereModal] = useState(false);
-  const [showEditProfile, setShowEditProfile] = useState(false);
 
   // Live Location Atmospheric Weather Engine
   const {
@@ -105,24 +91,8 @@ export default function App() {
   // 6: Reasons Jar
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Special Love Note state
-  const [specialNote, setSpecialNote] = useState<SpecialLoveNote>(() => {
-    const loaded = loadFromStorage('girlfriend_special_note', DEFAULT_SPECIAL_NOTE);
-    if (
-      !loaded.title ||
-      loaded.title.toLowerCase().includes('princess') ||
-      loaded.signature.toLowerCase().includes('charming')
-    ) {
-      const updated: SpecialLoveNote = {
-        ...DEFAULT_SPECIAL_NOTE,
-        title: 'To My Dearest Aishhh',
-        signature: 'With all my heart, forever yours, Sadan',
-      };
-      saveToStorage('girlfriend_special_note', updated);
-      return updated;
-    }
-    return loaded;
-  });
+  // Special Love Note state (fixed to the exact romantic letter, editing removed)
+  const specialNote: SpecialLoveNote = DEFAULT_SPECIAL_NOTE;
 
   const [notes, setNotes] = useState<LoveNote[]>(() => {
     const loaded = loadFromStorage('girlfriend_notes', DEFAULT_LOVE_NOTES);
@@ -142,18 +112,6 @@ export default function App() {
   );
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  // Audio playback state synced with MusicBoxPlayer sound engine
-  const [isMusicPlaying, setIsMusicPlaying] = useState<boolean>(sound.getIsPlaying());
-  const [currentTrack, setCurrentTrack] = useState(sound.getCurrentTrack());
-
-  useEffect(() => {
-    const unsubscribe = sound.subscribe((playing, track) => {
-      setIsMusicPlaying(playing);
-      setCurrentTrack(track);
-    });
-    return unsubscribe;
-  }, []);
 
   // Sync to storage
   useEffect(() => {
@@ -371,16 +329,6 @@ export default function App() {
         partnerName={profile.partnerName}
       />
 
-      <EditProfileModal
-        isOpen={showEditProfile}
-        onClose={() => setShowEditProfile(false)}
-        profile={profile}
-        onSave={(updated) => {
-          setProfile(updated);
-          showToast(`Saved personalized profile for ${updated.partnerName} & ${updated.yourName}! 💑`);
-        }}
-      />
-
       {/* Weather Atmosphere Mood & Skies Modal */}
       <AtmosphereModal
         isOpen={showAtmosphereModal}
@@ -407,23 +355,11 @@ export default function App() {
             </div>
             <div className="flex items-center gap-1.5 min-w-0">
               <span
-                className="font-romantic text-xl sm:text-2xl text-rose-950 font-bold tracking-wide truncate max-w-[110px] xs:max-w-[150px] sm:max-w-none"
+                className="font-romantic text-xl sm:text-2xl text-rose-950 font-bold tracking-wide truncate"
                 style={{ fontFamily: "'Dancing Script', cursive" }}
               >
-                For {profile.partnerName}
+                AISHHH & AISHHPAGLUU
               </span>
-              <button
-                id="edit-profile-btn"
-                onClick={() => {
-                  sound.playChime('sparkle');
-                  setShowEditProfile(true);
-                }}
-                className="px-2 py-0.5 rounded-full bg-pink-100 hover:bg-pink-200 active:bg-pink-300 text-rose-700 text-[10px] sm:text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer shadow-2xs border border-pink-200/80 shrink-0"
-                title="Personalize names (Aishhh & Sadan)"
-              >
-                <Sparkles className="w-3 h-3 text-rose-500" />
-                <span className="hidden xs:inline">Edit Names</span>
-              </button>
             </div>
           </div>
 
@@ -460,37 +396,6 @@ export default function App() {
                 <span className="hidden md:inline text-[11px] text-rose-600 font-normal">
                   {weatherData.temperature}°
                 </span>
-              )}
-            </button>
-
-            {/* MusicBoxPlayer Mute/Unmute Quick Toggle */}
-            <button
-              id="header-music-toggle-btn"
-              onClick={() => {
-                sound.toggleMusicBox();
-              }}
-              className={`min-h-[44px] min-w-[44px] px-3 py-2 rounded-full transition-all cursor-pointer flex items-center justify-center gap-1.5 select-none touch-manipulation active:scale-95 ${
-                isMusicPlaying
-                  ? 'bg-rose-100 hover:bg-rose-200 active:bg-rose-300 text-rose-800 ring-1 ring-rose-300/80 shadow-2xs'
-                  : 'bg-stone-100/90 hover:bg-rose-50 active:bg-rose-100 text-stone-600 hover:text-rose-700'
-              }`}
-              title={
-                isMusicPlaying
-                  ? `Mute romantic music (Playing: ${currentTrack?.title || 'Romance'})`
-                  : 'Play romantic music'
-              }
-              aria-label={isMusicPlaying ? 'Mute background music' : 'Unmute background music'}
-            >
-              {isMusicPlaying ? (
-                <>
-                  <Volume2 className="w-4 h-4 text-rose-600 animate-pulse" />
-                  <span className="hidden md:inline text-xs font-medium">Mute</span>
-                </>
-              ) : (
-                <>
-                  <VolumeX className="w-4 h-4 text-stone-500" />
-                  <span className="hidden md:inline text-xs font-medium">Unmute</span>
-                </>
               )}
             </button>
 
@@ -605,10 +510,6 @@ export default function App() {
                 note={specialNote}
                 partnerName={profile.partnerName}
                 yourName={profile.yourName}
-                onUpdateNote={(updated) => {
-                  setSpecialNote(updated);
-                  showToast('Your custom love note was saved! 💖');
-                }}
                 onNext={goToNextSlide}
               />
             </motion.div>
@@ -973,9 +874,6 @@ export default function App() {
           </p>
         </div>
       </footer>
-
-      {/* Floating Music Box & Soundscape Player */}
-      <MusicBoxPlayer />
 
       {/* Cute Toast Notification */}
       {toastMessage && (

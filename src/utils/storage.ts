@@ -1,17 +1,17 @@
 import { CoupleProfile, LoveNote, LoveReason, SpecialLoveNote } from '../types';
 
 export const DEFAULT_PROFILE: CoupleProfile = {
-  partnerName: 'Aishhh',
-  yourName: 'Sadan',
+  partnerName: 'AISHHH',
+  yourName: 'AISHHPAGLUU',
   anniversaryDate: '2025-01-01',
-  nickname: 'Aishhh',
-  specialSongTitle: 'Moonlight Serenade'
+  nickname: 'AISHHH',
+  specialSongTitle: 'Melodious Romance'
 };
 
 export const DEFAULT_SPECIAL_NOTE: SpecialLoveNote = {
-  title: "To My Dearest Aishhh",
-  body: `From the very moment we met on 1 January 2025, my whole world shifted into colors I never knew existed.\n\nEvery smile you give me lights up even my darkest days, and every second in your arms feels like coming home. You are my best friend, my safe place, and the most precious person I could ever dream of.\n\nI promise to love you endlessly, through every quiet morning and every starry night. Happy every day with you, my darling Aishhh.`,
-  signature: "With all my heart, forever yours, Sadan",
+  title: "To My Dearest AISHHH",
+  body: `From the very moment we met on 1 January 2025, my whole world shifted into colors I never knew existed.\n\nEvery smile you give me lights up even my darkest days, and every second in your arms feels like coming home. You are my best friend, my safe place, and the most precious person I could ever dream of.\n\nI promise to love you endlessly, through every quiet morning and every starry night. Happy every day with you, my darling AISHHH.`,
+  signature: "With all my heart, forever yours, AISHHPAGLUU",
   date: "1 January 2025"
 };
 
@@ -21,7 +21,7 @@ export const DEFAULT_LOVE_NOTES: LoveNote[] = [
     category: 'open-when',
     title: 'Open when you miss me',
     preview: 'Whenever distance feels too far...',
-    content: `My sweetest Aishhh,\n\nWhenever you miss me, please close your eyes and place your hand over your heart. Feel that rhythm? That's me, holding you tight from wherever I am.\n\nYou are woven into every thought I have, every song I listen to, and every peaceful moment of my day. If you need me right this second, send me a single heart emoji and I will be there for you immediately.\n\nI love you to the moon and all the way back, Aishhh.`,
+    content: `My sweetest AISHHH,\n\nWhenever you miss me, please close your eyes and place your hand over your heart. Feel that rhythm? That's me, holding you tight from wherever I am.\n\nYou are woven into every thought I have, every song I listen to, and every peaceful moment of my day. If you need me right this second, send me a single heart emoji and I will be there for you immediately.\n\nI love you to the moon and all the way back, AISHHH.`,
     envelopeColor: 'from-rose-400 to-pink-500',
     sticker: '💌',
     date: 'Forever & Always'
@@ -30,8 +30,8 @@ export const DEFAULT_LOVE_NOTES: LoveNote[] = [
     id: 'note-2',
     category: 'open-when',
     title: 'Open when you had a hard day',
-    preview: 'Take a soft breath, my darling Aishhh...',
-    content: `My sweet Aishhh,\n\nTake a slow, deep breath and let your shoulders drop. Today may have been overwhelming or unkind, but please remember that bad days do not define your incredible worth.\n\nYou handled everything with so much grace, even when it felt heavy. Now it's time to rest. Wrap yourself in the comfiest blanket, let go of the pressure, and remember that Sadan is always in your corner, believing in you unconditionally.\n\nI'm so proud of you, today and every day, my Aishhh.`,
+    preview: 'Take a soft breath, my darling AISHHH...',
+    content: `My sweet AISHHH,\n\nTake a slow, deep breath and let your shoulders drop. Today may have been overwhelming or unkind, but please remember that bad days do not define your incredible worth.\n\nYou handled everything with so much grace, even when it felt heavy. Now it's time to rest. Wrap yourself in the comfiest blanket, let go of the pressure, and remember that AISHHPAGLUU is always in your corner, believing in you unconditionally.\n\nI'm so proud of you, today and every day, my AISHHH.`,
     envelopeColor: 'from-amber-300 to-rose-400',
     sticker: '🧸',
     date: 'For Tough Moments'
@@ -41,7 +41,7 @@ export const DEFAULT_LOVE_NOTES: LoveNote[] = [
     category: 'open-when',
     title: 'Open when you need a reminder of how gorgeous you are',
     preview: 'Have you seen yourself through my eyes?',
-    content: `Dearest Aishhh,\n\nIf you could only borrow my eyes for thirty seconds, you would never doubt your beauty again. \n\nI love your sleepy morning smile, the effortless way you tie your hair up, the cute little expressions you make when you are focused on something, and the pure warmth in your eyes when you laugh. You don't just look breathtaking—your kind soul makes you the most captivating person in the universe.\n\nYou're my dream girl, yesterday, today, and always, Aishhh.`,
+    content: `Dearest AISHHH,\n\nIf you could only borrow my eyes for thirty seconds, you would never doubt your beauty again. \n\nI love your sleepy morning smile, the effortless way you tie your hair up, the cute little expressions you make when you are focused on something, and the pure warmth in your eyes when you laugh. You don't just look breathtaking—your kind soul makes you the most captivating person in the universe.\n\nYou're my dream girl, yesterday, today, and always, AISHHH.`,
     envelopeColor: 'from-purple-400 to-pink-500',
     sticker: '✨',
     date: 'A Gentle Truth'
@@ -51,7 +51,7 @@ export const DEFAULT_LOVE_NOTES: LoveNote[] = [
     category: 'open-when',
     title: 'Open when you can’t fall asleep',
     preview: 'Let the night hold you softly...',
-    content: `My sleepy Aishhh,\n\nIf your mind is racing and sleep feels far away, let this note be a warm lullaby.\n\nYou don't have to solve tomorrow's puzzles right now. The stars are shining softly outside, the world is quiet, and you are safe. Close your eyes and picture us cuddled up together, warm and peaceful, listening to the quiet night.\n\nDream sweet dreams, my love. Sadan will see you in the morning.`,
+    content: `My sleepy AISHHH,\n\nIf your mind is racing and sleep feels far away, let this note be a warm lullaby.\n\nYou don't have to solve tomorrow's puzzles right now. The stars are shining softly outside, the world is quiet, and you are safe. Close your eyes and picture us cuddled up together, warm and peaceful, listening to the quiet night.\n\nDream sweet dreams, my love. AISHHPAGLUU will see you in the morning.`,
     envelopeColor: 'from-indigo-400 to-pink-400',
     sticker: '🌙',
     date: 'Midnight Thoughts'
@@ -61,7 +61,7 @@ export const DEFAULT_LOVE_NOTES: LoveNote[] = [
     category: 'open-when',
     title: 'Open for an instant smile',
     preview: 'A quick reminder of something true...',
-    content: `Hey beautiful Aishhh!\n\nJust dropping by to remind you that out of 8 billion people on this planet, meeting you is the best thing that ever happened to me.\n\nAlso, your laugh is literally my favorite sound in the world, your hugs are the ultimate recharge station, and you are stuck with Sadan forever! No refunds, no exchanges! 🥰`,
+    content: `Hey beautiful AISHHH!\n\nJust dropping by to remind you that out of 8 billion people on this planet, meeting you is the best thing that ever happened to me.\n\nAlso, your laugh is literally my favorite sound in the world, your hugs are the ultimate recharge station, and you are stuck with AISHHPAGLUU forever! No refunds, no exchanges! 🥰`,
     envelopeColor: 'from-pink-400 to-rose-400',
     sticker: '💖',
     date: 'Pure Happiness'
